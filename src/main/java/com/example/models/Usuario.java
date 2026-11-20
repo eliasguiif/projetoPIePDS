@@ -1,14 +1,17 @@
 package com.example.models;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Usuario implements UserDetails{
@@ -24,6 +27,9 @@ public class Usuario implements UserDetails{
 	private String email;
 	private String senha;
 	private String cpf;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Papel> papeis;
 	
 	public Long getId() {
 		return id;
@@ -55,15 +61,24 @@ public class Usuario implements UserDetails{
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+	
+	
+	public List<Papel> getPapeis() {
+		return papeis;
+	}
+	public void setPapeis(List<Papel> papeis) {
+		this.papeis = papeis;
+	}
+	  
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.papeis;
 	}
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.senha;
 	}
 	@Override
 	public String getUsername() {
