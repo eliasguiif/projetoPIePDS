@@ -6,6 +6,6 @@ import com.example.models.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	Usuario findByEmail(String email);
+	Usuario findByMatricula(String matricula);
 	
 }

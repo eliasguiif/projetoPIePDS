@@ -27,6 +27,8 @@ public class Usuario implements UserDetails{
 	private String email;
 	private String senha;
 	private String cpf;
+	private String matricula;
+	
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Papel> papeis;
@@ -69,6 +71,14 @@ public class Usuario implements UserDetails{
 	public void setPapeis(List<Papel> papeis) {
 		this.papeis = papeis;
 	}
+	
+	public String getMatricula() {
+	    return matricula;
+	}
+
+	public void setMatricula(String matricula) {
+	    this.matricula = matricula;
+	}
 	  
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,7 +93,7 @@ public class Usuario implements UserDetails{
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.matricula;
 	}
 	
 }
