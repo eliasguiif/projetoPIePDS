@@ -12,6 +12,16 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 
 @Configuration
@@ -58,30 +68,43 @@ public class WebSecurityConfig {
         return http.build();
     }
     @Bean
-    public DefaultOAuth2UserService suapUserService() {
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> suapUserService() {
 
         DefaultOAuth2UserService service = new DefaultOAuth2UserService();
 
-        service.setAttributesConverter(userRequest -> attributes -> {
+        return userRequest -> {
 
-            System.out.println("===== ATRIBUTOS DO SUAP =====");
+            OAuth2User usuario = service.loadUser(userRequest);
 
-            attributes.forEach((chave, valor) -> {
-                System.out.println(chave);
+            String tipoUsuario = usuario.getAttribute("tipo_usuario");
 
-                if (valor instanceof java.util.Map<?, ?> mapa) {
-                    System.out.println("Campos internos: " + mapa.keySet());
-                }
-            });
+            Set<GrantedAuthority> permissoes =
+                    new HashSet<>(usuario.getAuthorities());
 
-            System.out.println("============================");
+            if ("Aluno".equalsIgnoreCase(tipoUsuario)) {
 
-            System.out.println("Tipo de usuario: " + attributes.get("tipo_usuario"));
-            
-            return attributes;
-        });
+                permissoes.add(
+                        new SimpleGrantedAuthority("ROLE_ALUNO")
+                );
 
-        return service;
+            } else if ("Servidor".equalsIgnoreCase(tipoUsuario)) { //----substituir pelo tipo de user
+
+                // Regra provisoria, somente para testes
+                permissoes.add(
+                        new SimpleGrantedAuthority("ROLE_PROFESSOR")
+                );
+
+            }
+
+            System.out.println("Tipo de usuario: " + tipoUsuario);
+            System.out.println("Permissoes: " + permissoes);
+
+            return new DefaultOAuth2User(
+                    permissoes,
+                    usuario.getAttributes(),
+                    "identificacao"
+            );
+        };
     }
     
     private OAuth2AuthorizationRequestResolver authorizationRequestResolver(
