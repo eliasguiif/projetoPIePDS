@@ -22,7 +22,7 @@
 				<ul>
 					<li><a th:href="@{/}">Início</a></li>
 
-					<li><a th:href="@{/centros-aprendizagem}"> Centros de Aprendizagem </a></li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/centros-aprendizagem}"> Centros de Aprendizagem </a></li>
 
 					<li sec:authorize="hasRole('ALUNO')"><a th:href="@{/meus-atendimentos}"> Meus atendimentos </a></li>
 
