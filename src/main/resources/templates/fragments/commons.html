@@ -24,12 +24,12 @@
 
 					<li sec:authorize="isAuthenticated()"><a th:href="@{/centros-aprendizagem}"> Centros de Aprendizagem </a></li>
 
-					<li sec:authorize="hasRole('ALUNO')"><a th:href="@{/meus-atendimentos}"> Meus atendimentos </a></li>
+					<li sec:authorize="hasAnyRole('ALUNO', 'ADMIN')"><a th:href="@{/meus-atendimentos}"> Meus atendimentos </a></li>
 
-					<li sec:authorize="hasRole('PROFESSOR')"><a
+					<li sec:authorize="hasAnyRole('PROFESSOR', 'ADMIN')"><a
 						th:href="@{/meus-cas}"> Meus CAs </a></li>
 
-					<li sec:authorize="hasRole('PROFESSOR')"><a th:href="@{/solicitacoes}"> Solicitações </a></li>
+					<li sec:authorize="hasAnyRole('PROFESSOR', 'ADMIN')"><a th:href="@{/solicitacoes}"> Solicitações </a></li>
 
 					<li sec:authorize="hasRole('ADMIN')"><a th:href="@{/usuarios}"> Usuários </a></li>
 
